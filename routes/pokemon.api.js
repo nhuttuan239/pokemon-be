@@ -23,7 +23,7 @@ const pokemonTypes = [
   "water",
 ];
 
-/* GET all pokemons */
+/* GET all Pokémons */
 router.get("/", (req, res, next) => {
   //----------------------input validation----------------------
   const allowedFilter = ["name", "type", "page", "limit"];
@@ -86,7 +86,7 @@ router.get("/", (req, res, next) => {
   }
 });
 
-/* GET single pokemon info. */
+/* GET single Pokémon information */
 router.get("/:pokemonId", (req, res, next) => {
   //----------------------input validation----------------------
   try {
@@ -140,7 +140,7 @@ router.get("/:pokemonId", (req, res, next) => {
   }
 });
 
-/* POST a new pokemon */
+/* POST creating new Pokémon */
 router.post("/", (req, res, next) => {
   //----------------------input validation----------------------
 

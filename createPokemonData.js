@@ -14,7 +14,9 @@ const createPokemonData = async () => {
       types: e.Type2
         ? [e.Type1.toLowerCase(), e.Type2.toLowerCase()]
         : [e.Type1.toLowerCase()],
-      url: `/images/pokemon/${index + 1}.png`,
+      url: `https://pokemon-be-pmyl.onrender.com/images/pokemon/${
+        index + 1
+      }.png`,
     }))
     .filter((p) => p.id < 722);
   console.log(newData);
