@@ -26,11 +26,11 @@ const pokemonTypes = [
 /* GET all Pokémons */
 router.get("/", (req, res, next) => {
   //----------------------input validation----------------------
-  const allowedFilter = ["name", "type", "page", "limit"];
+  const allowedFilter = ["search", "type", "page", "limit"];
   try {
-    let { page, limit, ...filterQuery } = req.query;
+    let { page, limit, ...filterQuery } = req.query; // from the req_frontend
     page = parseInt(page) || 1;
-    limit = parseInt(limit) || 20;
+    limit = parseInt(limit) || 10;
     //allow name, type,limit and page query string only
     const filterKeys = Object.keys(filterQuery);
     filterKeys.forEach((key) => {
@@ -49,38 +49,30 @@ router.get("/", (req, res, next) => {
     let db = fs.readFileSync("db.json", "utf-8");
 
     db = JSON.parse(db);
-    const { data, totalPokemons } = db;
-    //Filter data by title
+    const { data } = db;
+    console.log(data);
+    //Filter data by name
+    //Filter data
     let result = [];
     if (filterKeys.length) {
-      filterKeys.forEach((condition) => {
-        if (condition === "type") {
-          result = result.length
-            ? result.filter((pokemon) =>
-                pokemon[condition].includes(filterQuery[condition])
-              )
-            : data.filter((pokemon) =>
-                pokemon[condition].includes(filterQuery[condition])
-              );
-        } else {
-          result = result.length
-            ? result.filter(
-                (pokemon) => pokemon[condition] === filterQuery[condition]
-              )
-            : data.filter(
-                (pokemon) => pokemon[condition] === filterQuery[condition]
-              );
-        }
-      });
+      if (filterKeys.includes("search")) {
+        result = data.filter((pokemon) =>
+          pokemon.name.toLowerCase().includes(filterQuery.search.toLowerCase())
+        );
+      }
+
+      if (filterKeys.includes("type")) {
+        result = data.filter((pokemon) =>
+          pokemon.types.includes(filterQuery.type)
+        );
+      }
     } else {
       result = data;
     }
-    let pokemonList = result.slice(offset, offset + limit);
     //then select number of result by offset
-    result = { data: pokemonList, count: pokemonList.length, totalPokemons };
-
-    //----------------------send response----------------------
-    res.status(200).send(result);
+    result = result.slice(offset, offset + limit);
+    //send response
+    res.status(200).send({ data: result });
   } catch (error) {
     next(error);
   }
